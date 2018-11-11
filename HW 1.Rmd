@@ -1,0 +1,115 @@
+---
+title: "Untitled"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## R Markdown
+
+This is an R Markdown document. Markdown is a simple formatting syntax for authoring HTML, PDF, and MS Word documents. For more details on using R Markdown see <http://rmarkdown.rstudio.com>.
+
+When you click the **Knit** button a document will be generated that includes both content as well as the output of any embedded R code chunks within the document. You can embed an R code chunk like this:
+
+```{r cars}
+summary(cars)
+```
+
+## Including Plots
+
+You can also embed plots, for example:
+
+```{r pressure, echo=FALSE}
+plot(pressure)
+```
+
+Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.
+
+#1. WHO csv
+
+#Read the csv file
+WHO <- read.csv("WHO.csv")
+
+#b find the country with the highest population
+which.max(WHO$Population) ##36th position
+maxpop <- WHO[36,1]
+print(maxpop)
+
+#c Get the Population of Malaysia
+malaysia <- which(WHO$Country == 'Malaysia')
+WHO[malaysia,3]
+
+#d find the country with the lowest literacy rate
+row_lowliteracy <- which.min(WHO$LiteracyRate)
+WHO[row_lowliteracy,1]
+
+#e Richest country in Europe based on GNI
+europe <- subset(WHO, Region == 'Europe')
+richcountry <-which.max(europe$GNI) ## returns the 29th position
+europe [richcountry,1] ## Select the 29th row from the europe subset
+
+#f mean life expetancy of countries in Africa
+africa <- subset(WHO, Region == 'Africa')
+meanlife <- mean(africa$LifeExpectancy, na.rm=TRUE) ## Gets the mean life expentancy of europe
+print(meanlife)
+
+#g Find the number of countries with population of over 10Mn
+countriesover10 <- subset(WHO,Population > 10000)
+dim(countriesover10)[1]
+
+#h Find names of the country (top 5) in the Americas with the highest child mortality rate
+americas <- subset(WHO, Region == 'Americas')
+descendingorderamericas <- order(americas$ChildMortality, decreasing = TRUE)
+arrangedamericas <- americas[descendingorderamericas,]
+top5americas <- head(arrangedamericas,5)
+top5americas$Country
+
+#2
+historical_nba <- read.csv('Historical NBA Performance.csv')
+
+#Year Chicago Bulls Highest Winning Percentage
+bulls <- subset(historical_nba, Team == 'Bulls')
+highbulls <- max(bulls$Winning.Percentage) 
+highbullsrow<- subset(bulls,Winning.Percentage == highbulls)
+highbullsrow$ï..Year
+
+#b. Find team with even win-loss record (0.500 win percentage)
+
+evenwins <- subset(historical_nba,Winning.Percentage == 0.50)
+print(evenwins)
+
+#3 the Seasons Stats Data Set
+season_stats <- read.csv('Seasons_Stats.csv')
+
+#a find the player with the highest 3 point attempt rate
+
+#b Find the players highest ft rate
+
+# Lebron James scored the highest
+
+king <- subset(season_stats, Player == 'LeBron James')
+kinghighest <- max(king$PTS, na.rm = TRUE)
+subset(king, PTS == kinghighest)
+
+# Jordan scored highest number of points
+airness <- subset(season_stats, Player == 'Michael Jordan*')
+airnesshighest <- max(airness$PTS, na.rm = TRUE)
+subset(airness, PTS == airnesshighest)
+
+# Kobe Bryant PER lowest minutes
+kobe <- subset(season_stats, Player == 'Kobe Bryant')
+kobePER <- subset(kobe, MP == min(kobe$MP))$PER
+print (kobePER)
+
+#4 National Universities Rankings
+natuniversities$cleanUndergrad.Enrollment <- gsub(pattern = ",", replacement = "",natuniversities$Undergrad.Enrollment)
+rowhighenrollment <- which.max(as.numeric(natuniversities$cleanUndergrad.Enrollment))
+natuniversities$Name [rowhighenrollment]
+
+
+#average tuition fee of top 10 universities
+top10 <- natuniversities[order(natuniversities$Rank),][1:10,]
+top10$fixtuition <- gsub(pattern = "\\$|\\,",replacement = "", top10$Tuition.and.fees)
+mean(as.numeric(top10$fixtuition))
